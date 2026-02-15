@@ -1,11 +1,10 @@
 <?php
 $layout = [
-	'page_title' => 'Galéria',
-	'header_title' => 'Dažďové jazerá',
+	'page_title_key' => 'page.gallery',
 ];
 include __DIR__ . '/includes/layout-start.php';
 ?>
-							<h1><?php echo $layout['page_title'];?></h1>
+								<h1><?php echo htmlspecialchars(t('page.gallery'), ENT_QUOTES, 'UTF-8'); ?></h1>
 							
 							<section class="tiles">
 								<article class="style1">

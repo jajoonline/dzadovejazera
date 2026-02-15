@@ -207,39 +207,53 @@
 		});
 	}
 
-	var mainFlyer = createFlyer({ size: 1, swarm: false });
-	var mainStart = randomVideoStart();
-	var mainKeyframes = applyFadeIn(buildIntroToTarget(mainStart, videoZone, 0, 1, { x: 0, y: 0 }), 1);
-	mainFlyer.style.transform = mainKeyframes[0].transform;
-	document.body.appendChild(mainFlyer);
-	document.body.classList.add('logo-intro-active');
-	var mainCleaned = false;
-
-	function cleanupMain() {
-		if (mainCleaned) return;
-		mainCleaned = true;
-
-		// Prevent flash when swapping animated flyer for the static logo.
-		logoImg.style.transition = 'none';
-		logoImg.style.opacity = '1';
-		document.body.classList.remove('logo-intro-active');
-
-		// Brief crossfade out of the animated flyer avoids a single-frame blink.
-		mainFlyer.style.transition = 'opacity 80ms linear';
-		mainFlyer.style.opacity = '0';
-		window.setTimeout(function () {
-			mainFlyer.remove();
-		}, 90);
+	var sessionMainKey = 'dragonfly_main_intro_played';
+	var shouldAnimateMain = true;
+	try {
+		shouldAnimateMain = window.sessionStorage.getItem(sessionMainKey) !== '1';
+	} catch (e) {
+		shouldAnimateMain = true;
 	}
 
-	var mainAnimation = mainFlyer.animate(mainKeyframes, {
-		duration: 10000,
-		iterations: 1,
-		easing: 'ease-in-out',
-		fill: 'forwards'
-	});
-	mainAnimation.addEventListener('finish', cleanupMain);
-	window.setTimeout(cleanupMain, 10200);
+	if (shouldAnimateMain) {
+		try {
+			window.sessionStorage.setItem(sessionMainKey, '1');
+		} catch (e) {}
+
+		var mainFlyer = createFlyer({ size: 1, swarm: false });
+		var mainStart = randomVideoStart();
+		var mainKeyframes = applyFadeIn(buildIntroToTarget(mainStart, videoZone, 0, 1, { x: 0, y: 0 }), 1);
+		mainFlyer.style.transform = mainKeyframes[0].transform;
+		document.body.appendChild(mainFlyer);
+		document.body.classList.add('logo-intro-active');
+		var mainCleaned = false;
+
+		function cleanupMain() {
+			if (mainCleaned) return;
+			mainCleaned = true;
+
+			// Prevent flash when swapping animated flyer for the static logo.
+			logoImg.style.transition = 'none';
+			logoImg.style.opacity = '1';
+			document.body.classList.remove('logo-intro-active');
+
+			// Brief crossfade out of the animated flyer avoids a single-frame blink.
+			mainFlyer.style.transition = 'opacity 80ms linear';
+			mainFlyer.style.opacity = '0';
+			window.setTimeout(function () {
+				mainFlyer.remove();
+			}, 90);
+		}
+
+		var mainAnimation = mainFlyer.animate(mainKeyframes, {
+			duration: 10000,
+			iterations: 1,
+			easing: 'ease-in-out',
+			fill: 'forwards'
+		});
+		mainAnimation.addEventListener('finish', cleanupMain);
+		window.setTimeout(cleanupMain, 10200);
+	}
 
 	for (var i = 0; i < 2; i++) {
 		var flipX = i % 2 === 0 ? -1 : 1;

@@ -1,7 +1,6 @@
 <?php
 $layout = [
-	'page_title' => 'Úvod',
-	'header_title' => 'Dažďové jazerá',
+	'page_title_key' => 'page.home',
 ];
 include __DIR__ . '/includes/layout-start.php';
 ?>
@@ -24,15 +23,14 @@ include __DIR__ . '/includes/layout-start.php';
 											<span class="icon solid fa-expand" aria-hidden="true"></span>
 										</button>
 									</div>
-								</div>
-								<div class="intro-copy">
-									<p>Navrhujeme a realizujeme vodozádržné vodné plochy, slúžiace na zabránenie alebo spomalenie odtoku zrážkových vôd do vodných tokov, z lokality ich spadnutia.</p>
-									<h3 class="cta-contact">Ak si prajete dozvedieť viac, alebo zvažujete realizáciu, tak nás <a href="#footer">KONTAKTUJTE</a>.</h3>
-									<p style="text-align: justify;">Dažďové jazerá zachytávajú dažďovú vodu zo striech, spevnených aj nespevnených plôch, drenáží, priesakov a prameňov. Vodu zadržia priamo v mieste, kde spadla. Nepoužívame pritom vodu zo studní ani vrtov, aby sme neodčerpávali cenné podzemné zásoby. K doplneniu z týchto zdrojov pristupujeme len výnimočne a iba v nevyhnutnom rozsahu počas extrémneho sucha alebo pri dlhších obdobiach s nízkymi zrážkami, aby biotop nezanikol.</p>
-									<p style="text-align: justify;">
-									Prirodzeným odparovaním pomáhajú ochladzovať okolie a zlepšujú mikroklímu. Podľa riešenia dokážu vracať vlhkosť aj do pôdy v okolí, čím krajina menej vysychá a suché miesta sa postupne obnovujú.</p>
-								</div>
-							</header>
+									</div>
+									<div class="intro-copy">
+										<p><?php echo htmlspecialchars(t('index.intro.1'), ENT_QUOTES, 'UTF-8'); ?></p>
+										<h3 class="cta-contact"><?php echo htmlspecialchars(t('index.cta'), ENT_QUOTES, 'UTF-8'); ?> <a href="#footer"><?php echo htmlspecialchars(t('index.cta.link'), ENT_QUOTES, 'UTF-8'); ?></a>.</h3>
+										<p style="text-align: justify;"><?php echo htmlspecialchars(t('index.intro.2'), ENT_QUOTES, 'UTF-8'); ?></p>
+										<p style="text-align: justify;"><?php echo htmlspecialchars(t('index.intro.3'), ENT_QUOTES, 'UTF-8'); ?></p>
+									</div>
+								</header>
 							<section class="tiles">
 								<article class="style1">
 									<span class="image">
@@ -67,17 +65,17 @@ include __DIR__ . '/includes/layout-start.php';
 										</div>
 									</a>
 								</article>
-								</section>
+									</section>
 									<section style="margin-top: 3em;" class="intro-copy">
-										<h2 id="prirodne">Prírodné dažďové jazerá</h2>
-									<p style="text-align: justify;">Bezfóliové dažďové jazerá sa hodia najmä do horských oblastí a tam, kde má pôda nízku priepustnosť. Výborne fungujú aj v lokalitách po melioráciách, kde pomáhajú obnoviť prirodzené zavodnenie krajiny. Ideálne sú miesta s trvalými alebo občasnými povrchovými prameňmi, s vyústením drenáží, prípadne so zvodmi dažďovej vody zo striech a spevnených plôch. Vhodné môžu byť aj lokality s vyššou hladinou podzemnej vody.</p>
-
-									<p style="text-align: justify;">Pri bezfóliových jazerách je prirodzené, že hladina vody sa mení. Kolíše podľa ročného obdobia, množstva zrážok, odparu a vsakovania do pôdy.</p>
-								</section>
+										<h2 id="prirodne"><?php echo htmlspecialchars(t('index.natural.title'), ENT_QUOTES, 'UTF-8'); ?></h2>
+										<p style="text-align: justify;"><?php echo htmlspecialchars(t('index.natural.1'), ENT_QUOTES, 'UTF-8'); ?></p>
+	
+										<p style="text-align: justify;"><?php echo htmlspecialchars(t('index.natural.2'), ENT_QUOTES, 'UTF-8'); ?></p>
+									</section>
 									<section class="intro-copy">
-										<h2 id="poloprirodne">Poloprírodné dažďové jazerá</h2>
-									<p style="text-align: justify;">Niektoré jazerá majú hlbokú časť riešenú ako nepriepustnú, aby si udržali stabilnú hladinu aj v suchších obdobiach. Plytšie zóny sú izolované prírodnými materiálmi, najčastejšie ílom, a môžu byť čiastočne priepustné. Táto kombinácia zabezpečí, že voda neklesne pod požadovanú úroveň, no zároveň sa zachytí čo najväčší objem zrážkovej vody.</p>
-
-									<p style="margin-bottom: 2em; text-align: justify;">Plytké časti slúžia ako prirodzený „záchytný priestor“. Voda v nich zostáva dovtedy, kým sa postupne neodparí alebo nevsiakne do pôdy, čím podporuje vlhkosť v okolí a zlepšuje miestnu mikroklímu.</p>
-								</section>
-	<?php include __DIR__ . '/includes/layout-end.php'; ?>
+										<h2 id="poloprirodne"><?php echo htmlspecialchars(t('index.semi.title'), ENT_QUOTES, 'UTF-8'); ?></h2>
+										<p style="text-align: justify;"><?php echo htmlspecialchars(t('index.semi.1'), ENT_QUOTES, 'UTF-8'); ?></p>
+	
+										<p style="margin-bottom: 2em; text-align: justify;"><?php echo htmlspecialchars(t('index.semi.2'), ENT_QUOTES, 'UTF-8'); ?></p>
+									</section>
+		<?php include __DIR__ . '/includes/layout-end.php'; ?>

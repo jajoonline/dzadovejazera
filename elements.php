@@ -1,11 +1,10 @@
 <?php
 $layout = [
-	'page_title' => 'Prvky',
-	'header_title' => 'Dažďové jazerá',
+	'page_title_key' => 'page.elements',
 ];
 include __DIR__ . '/includes/layout-start.php';
 ?>
-							<h1>Prvky</h1>
+								<h1><?php echo htmlspecialchars(t('page.elements'), ENT_QUOTES, 'UTF-8'); ?></h1>
 
 							<!-- Text -->
 								<section>

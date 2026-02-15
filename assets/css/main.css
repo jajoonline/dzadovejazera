@@ -3053,6 +3053,30 @@ input, select, textarea {
 			z-index: 10030;
 		}
 
+			#navigation .lang-switch {
+				display: flex;
+				flex-direction: row;
+				gap: 0.2em;
+				justify-content: center;
+				align-items: center;
+				margin-top: calc(0.35em + 3px);
+				font-size: 0.56em;
+				font-weight: 900;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				line-height: 1;
+			}
+
+			#navigation .lang-switch a {
+				color: #6f604f;
+				border-bottom: 1px solid transparent;
+			}
+
+			#navigation .lang-switch a.is-active {
+				color: #4f3d2c;
+				border-bottom-color: #4f3d2c;
+			}
+
 			#navigation ul {
 				display: -moz-flex;
 				display: -webkit-flex;
@@ -3146,6 +3170,11 @@ input, select, textarea {
 					top: 1em;
 				}
 
+					#navigation .lang-switch {
+						margin-top: calc(0.3em + 3px);
+						font-size: 0.52em;
+					}
+
 					#navigation ul li a[href="#menu"]:before, #navigation ul li a[href="#menu"]:after {
 						background-size: 0.8203125em 0.8203125em;
 					}
@@ -3238,7 +3267,7 @@ input, select, textarea {
 		z-index: 10040;
 	}
 
-		#menu > .inner {
+			#menu > .inner {
 			-moz-transition: opacity 0.45s ease;
 			-webkit-transition: opacity 0.45s ease;
 			-ms-transition: opacity 0.45s ease;
@@ -3251,8 +3280,42 @@ input, select, textarea {
 			height: 100%;
 			padding: 2.75em;
 			opacity: 0;
-			overflow-y: auto;
-		}
+				overflow-y: auto;
+			}
+
+				#menu > .inner .menu-head {
+					display: flex;
+					align-items: baseline;
+					justify-content: space-between;
+					gap: 0.75em;
+				}
+
+				#menu > .inner .menu-head h2 {
+					margin: 0;
+				}
+
+				#menu > .inner .menu-lang-switch {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					gap: 0.45em;
+					font-size: 0.68em;
+					font-weight: 900;
+					letter-spacing: 0.1em;
+					text-transform: uppercase;
+					line-height: 1;
+					white-space: nowrap;
+				}
+
+				#menu > .inner .menu-lang-switch a {
+					color: rgba(255, 246, 232, 0.72);
+					border-bottom: 1px solid transparent;
+				}
+
+				#menu > .inner .menu-lang-switch a.is-active {
+					color: #fff6e8;
+					border-bottom-color: #fff6e8;
+				}
 
 				#menu > .inner > ul {
 					list-style: none;
