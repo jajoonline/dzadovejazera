@@ -9,13 +9,15 @@ $head_title = $page_title !== '' ? ($site_name . ' / ' . $page_title) : $site_na
 <!DOCTYPE HTML>
 
 <html lang="<?php echo htmlspecialchars($current_lang, ENT_QUOTES, 'UTF-8'); ?>">
-	<head>
-		<title><?php echo htmlspecialchars($head_title, ENT_QUOTES, 'UTF-8'); ?></title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
+		<head>
+			<title><?php echo htmlspecialchars($head_title, ENT_QUOTES, 'UTF-8'); ?></title>
+			<meta charset="utf-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+			<link rel="icon" type="image/svg+xml" href="images/logo.svg" />
+			<link rel="shortcut icon" href="images/logo.svg" />
+			<link rel="stylesheet" href="assets/css/main.css" />
+			<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		</head>
 			<body class="is-preload">
 				<nav id="navigation">
 					<ul>
