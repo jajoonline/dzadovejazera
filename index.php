@@ -1,60 +1,37 @@
-<!DOCTYPE HTML>
-<!--
-	Dažďové jazerá by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<title>Dažďové jazerá by HTML5 UP</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
-		<!-- Wrapper -->
-			<div id="wrapper">
-
-				<!-- Header -->
-					<header id="header">
-						<div class="inner">
-
-							<!-- Logo -->
-								<a href="index.php" class="logo">
-									<span class="symbol"><img src="images/logo.svg" alt="" /></span><span class="title">Dažďové jazerá</span>
-								</a>
-
-							<!-- Nav -->
-								<nav>
-									<ul>
-										<li><a href="#menu">Menu</a></li>
-									</ul>
-								</nav>
-
-						</div>
-					</header>
-
-				<!-- Menu -->
-					<nav id="menu">
-						<h2>Menu</h2>
-						<ul>
-							<li><a href="index.php">Domov</a></li>
-							<li><a href="generic.php">Ipsum veroeros</a></li>
-							<li><a href="generic.php">Tempus etiam</a></li>
-							<li><a href="generic.php">Consequat dolor</a></li>
-							<li><a href="elements.php">Prvky</a></li>
-						</ul>
-					</nav>
-
-				<!-- Main -->
-					<div id="main">
-						<div class="inner">
+<?php
+$layout = [
+	'page_title' => 'Úvod',
+	'header_title' => 'Dažďové jazerá',
+];
+include __DIR__ . '/includes/layout-start.php';
+?>
 							<header>
-								<p>Dažďové jazerá sú vodozádržné vodné plochy, slúžiace na zabránenie alebo spomalenie odtoku zrážkových vôd do vodných tokov, z lokality ich spadnutia.</p>
-								<h3 class="cta-contact">Ak si prajete dozvedieť viac, alebo zvažujete realizáciu, tak nás <a href="#footer">kontaktujte</a>.</h3>
-								<p>Zadržiavajú vodu, ktorá dopadla na strechy, spevnené a nespevnené plochy, z výpustov drenáží, z dočasných alebo trvalých zemných výverov a prameňov. Nežiaduce pri tom je používanie podzemných vôd zo studní či vrtov, aby nedochádzalo k odčerpávaniu cenných podzemných vôd. Dopĺňanie jazera z týchto zdrojov, je prípustné iba v obmedzenej, nevyhnutnej miere na odvrátenie deštrukcie biotopu v extrémnych suchách, alebo pri dlhších obdobiach z nízkymi zrážkami.</p>
-								<p>Následným odparom napomáhajú mikroklíme a v závislosti od ich prevedenia majú schopnosť (rôznu účinnosť) zvlhčovania pôd vo svojom okolí, čím zabraňujú vysychaniu krajiny alebo vracajú vlhkosť do vyschnutých pôd.</p>
+
+								<div class="cta-video-player" data-video-player>
+									<video class="cta-video" preload="metadata">
+										<source src="videos/dazdove_jazera.mp4" type="video/mp4" />
+										Váš prehliadač nepodporuje prehrávanie videa.
+									</video>
+									<div class="cta-video-controls">
+										<button type="button" class="button small primary cta-control-btn" data-action="toggle" aria-label="Prehrať alebo pozastaviť video">
+											<span class="icon solid fa-play" aria-hidden="true"></span>
+										</button>
+										<input type="range" min="0" max="100" value="0" step="0.1" data-action="seek" aria-label="Priebeh videa" />
+										<button type="button" class="button small cta-control-btn" data-action="mute" aria-label="Zapnúť alebo vypnúť zvuk">
+											<span class="icon solid fa-volume-up" aria-hidden="true"></span>
+										</button>
+										<button type="button" class="button small cta-control-btn" data-action="fullscreen" aria-label="Celá obrazovka">
+											<span class="icon solid fa-expand" aria-hidden="true"></span>
+										</button>
+									</div>
+								</div>
+								<div class="intro-copy">
+									<p>Navrhujeme a realizujeme vodozádržné vodné plochy, slúžiace na zabránenie alebo spomalenie odtoku zrážkových vôd do vodných tokov, z lokality ich spadnutia.</p>
+									<h3 class="cta-contact">Ak si prajete dozvedieť viac, alebo zvažujete realizáciu, tak nás <a href="#footer">KONTAKTUJTE</a>.</h3>
+									<p style="text-align: justify;">Dažďové jazerá zachytávajú dažďovú vodu zo striech, spevnených aj nespevnených plôch, drenáží, priesakov a prameňov. Vodu zadržia priamo v mieste, kde spadla. Nepoužívame pritom vodu zo studní ani vrtov, aby sme neodčerpávali cenné podzemné zásoby. K doplneniu z týchto zdrojov pristupujeme len výnimočne a iba v nevyhnutnom rozsahu počas extrémneho sucha alebo pri dlhších obdobiach s nízkymi zrážkami, aby biotop nezanikol.</p>
+									<p style="text-align: justify;">
+									Prirodzeným odparovaním pomáhajú ochladzovať okolie a zlepšujú mikroklímu. Podľa riešenia dokážu vracať vlhkosť aj do pôdy v okolí, čím krajina menej vysychá a suché miesta sa postupne obnovujú.</p>
+								</div>
 							</header>
 							<section class="tiles">
 								<article class="style1">
@@ -90,120 +67,17 @@
 										</div>
 									</a>
 								</article>
-								<article class="style4">
-									<span class="image">
-										<img src="images/pic04.jpg" alt="" />
-									</span>
-									<a href="generic.php">
-										<h2>Tempus</h2>
-										<div class="content">
-											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-										</div>
-									</a>
-								</article>
-								<article class="style5">
-									<span class="image">
-										<img src="images/pic05.jpg" alt="" />
-									</span>
-									<a href="generic.php">
-										<h2>Aliquam</h2>
-										<div class="content">
-											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-										</div>
-									</a>
-								</article>
-								<article class="style6">
-									<span class="image">
-										<img src="images/pic06.jpg" alt="" />
-									</span>
-									<a href="generic.php">
-										<h2>Veroeros</h2>
-										<div class="content">
-											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-										</div>
-									</a>
-								</article>
-								<article class="style2">
-									<span class="image">
-										<img src="images/pic07.jpg" alt="" />
-									</span>
-									<a href="generic.php">
-										<h2>Ipsum</h2>
-										<div class="content">
-											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-										</div>
-									</a>
-								</article>
-								<article class="style3">
-									<span class="image">
-										<img src="images/pic08.jpg" alt="" />
-									</span>
-									<a href="generic.php">
-										<h2>Dolor</h2>
-										<div class="content">
-											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-										</div>
-									</a>
-								</article>
-								<article class="style1">
-									<span class="image">
-										<img src="images/pic09.jpg" alt="" />
-									</span>
-									<a href="generic.php">
-										<h2>Nullam</h2>
-										<div class="content">
-											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-										</div>
-									</a>
-								</article>
-								<article class="style5">
-									<span class="image">
-										<img src="images/pic10.jpg" alt="" />
-									</span>
-									<a href="generic.php">
-										<h2>Ultricies</h2>
-										<div class="content">
-											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-										</div>
-									</a>
-								</article>
-								<article class="style6">
-									<span class="image">
-										<img src="images/pic11.jpg" alt="" />
-									</span>
-									<a href="generic.php">
-										<h2>Dictum</h2>
-										<div class="content">
-											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-										</div>
-									</a>
-								</article>
-								<article class="style4">
-									<span class="image">
-										<img src="images/pic12.jpg" alt="" />
-									</span>
-									<a href="generic.php">
-										<h2>Pretium</h2>
-										<div class="content">
-											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-										</div>
-									</a>
-								</article>
-							</section>
-						</div>
-					</div>
+								</section>
+								<section style="margin-top: 3em;" class="intro-copy">
+									<h2>Prírodné dažďové jazerá</h2>
+									<p style="text-align: justify;">Bezfóliové dažďové jazerá sa hodia najmä do horských oblastí a tam, kde má pôda nízku priepustnosť. Výborne fungujú aj v lokalitách po melioráciách, kde pomáhajú obnoviť prirodzené zavodnenie krajiny. Ideálne sú miesta s trvalými alebo občasnými povrchovými prameňmi, s vyústením drenáží, prípadne so zvodmi dažďovej vody zo striech a spevnených plôch. Vhodné môžu byť aj lokality s vyššou hladinou podzemnej vody.</p>
 
-				<!-- Footer -->
-				<?php include __DIR__ . "/includes/footer.php"; ?>
+									<p style="text-align: justify;">Pri bezfóliových jazerách je prirodzené, že hladina vody sa mení. Kolíše podľa ročného obdobia, množstva zrážok, odparu a vsakovania do pôdy.</p>
+								</section>
+								<section class="intro-copy">
+									<h2>Poloprírodné dažďové jazerá</h2>
+									<p style="text-align: justify;">Niektoré jazerá majú hlbokú časť riešenú ako nepriepustnú, aby si udržali stabilnú hladinu aj v suchších obdobiach. Plytšie zóny sú izolované prírodnými materiálmi, najčastejšie ílom, a môžu byť čiastočne priepustné. Táto kombinácia zabezpečí, že voda neklesne pod požadovanú úroveň, no zároveň sa zachytí čo najväčší objem zrážkovej vody.</p>
 
-			</div>
-
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
-
-	</body>
-</html>
+									<p style="margin-bottom: 2em; text-align: justify;">Plytké časti slúžia ako prirodzený „záchytný priestor“. Voda v nich zostáva dovtedy, kým sa postupne neodparí alebo nevsiakne do pôdy, čím podporuje vlhkosť v okolí a zlepšuje miestnu mikroklímu.</p>
+								</section>
+	<?php include __DIR__ . '/includes/layout-end.php'; ?>

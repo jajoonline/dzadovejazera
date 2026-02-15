@@ -1,0 +1,49 @@
+name: Deploy to Websupport FTP
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install lftp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+      - name: Deploy via FTP
+        env:
+          FTP_HOST: ${{ secrets.WEBSUPPORT_FTP_HOST }}
+          FTP_USERNAME: ${{ secrets.WEBSUPPORT_FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.WEBSUPPORT_FTP_PASSWORD }}
+        run: |
+          if [ -z "$FTP_HOST" ] || [ -z "$FTP_USERNAME" ] || [ -z "$FTP_PASSWORD" ]; then
+            echo "Missing one or more required secrets: WEBSUPPORT_FTP_HOST, WEBSUPPORT_FTP_USERNAME, WEBSUPPORT_FTP_PASSWORD"
+            exit 1
+          fi
+
+          lftp -e "
+            set ftp:ssl-allow true;
+            set ssl:verify-certificate no;
+            set net:max-retries 2;
+            set net:timeout 20;
+            set ftp:passive-mode true;
+            open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_HOST};
+            mirror -R --delete --verbose \
+              --exclude-glob .git* \
+              --exclude .github \
+              --exclude .DS_Store \
+              --exclude .gitignore \
+              ./ /web;
+            bye
+          "
