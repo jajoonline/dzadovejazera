@@ -47,7 +47,7 @@
 		drop.style.setProperty('--x', (Math.random() * 100).toFixed(2));
 		drop.style.setProperty('--drift', (Math.random() * 8 - 4).toFixed(2));
 		drop.style.setProperty('--size', (Math.random() * 0.55 + 0.5).toFixed(2) + 'rem');
-		drop.style.setProperty('--opacity', (Math.random() * 0.20 + 0.22).toFixed(2));
+		drop.style.setProperty('--opacity', (Math.random() * 0.24 + 0.30).toFixed(2));
 		drop.style.backgroundImage = 'url("data:image/svg+xml;utf8,' + dropSvg + '")';
 		layer.appendChild(drop);
 		drops.push(drop);

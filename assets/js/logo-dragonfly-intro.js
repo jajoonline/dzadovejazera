@@ -79,11 +79,8 @@
 		};
 	}
 
-	function randomUnderVideoStart() {
-		var xSpread = Math.min(140, (videoZone.maxX - videoZone.minX) * 0.35);
-		var x = clamp(videoCenterX - rect.width / 2 + rand(-xSpread, xSpread), videoZone.minX, videoZone.maxX);
-		var y = clamp(videoBottom + rand(30, 170), videoZone.minY, videoZone.maxY);
-		return { x: x, y: y };
+	function randomVideoStart() {
+		return randomPoint(videoZone);
 	}
 
 	function createFlyer(options) {
@@ -193,16 +190,46 @@
 		return keyframes;
 	}
 
+	function applyFadeIn(keyframes, targetOpacity) {
+		var fadeWindow = 0.08;
+		return keyframes.map(function (frame) {
+			var o = targetOpacity;
+			if (frame.offset <= 0) {
+				o = 0;
+			} else if (frame.offset < fadeWindow) {
+				o = targetOpacity * (frame.offset / fadeWindow);
+			}
+			return {
+				offset: frame.offset,
+				transform: frame.transform,
+				opacity: Math.max(0, Math.min(targetOpacity, o))
+			};
+		});
+	}
+
 	var mainFlyer = createFlyer({ size: 1, swarm: false });
-	var mainStart = randomUnderVideoStart();
-	var mainKeyframes = buildIntroToTarget(mainStart, videoZone, 0, 1, { x: 0, y: 0 });
+	var mainStart = randomVideoStart();
+	var mainKeyframes = applyFadeIn(buildIntroToTarget(mainStart, videoZone, 0, 1, { x: 0, y: 0 }), 1);
 	mainFlyer.style.transform = mainKeyframes[0].transform;
 	document.body.appendChild(mainFlyer);
 	document.body.classList.add('logo-intro-active');
+	var mainCleaned = false;
 
 	function cleanupMain() {
+		if (mainCleaned) return;
+		mainCleaned = true;
+
+		// Prevent flash when swapping animated flyer for the static logo.
+		logoImg.style.transition = 'none';
+		logoImg.style.opacity = '1';
 		document.body.classList.remove('logo-intro-active');
-		mainFlyer.remove();
+
+		// Brief crossfade out of the animated flyer avoids a single-frame blink.
+		mainFlyer.style.transition = 'opacity 80ms linear';
+		mainFlyer.style.opacity = '0';
+		window.setTimeout(function () {
+			mainFlyer.remove();
+		}, 90);
 	}
 
 	var mainAnimation = mainFlyer.animate(mainKeyframes, {
@@ -224,13 +251,13 @@
 			opacity: 0.9
 		});
 
-		var swarmStart = randomUnderVideoStart();
+		var swarmStart = randomVideoStart();
 		var bottomEntryAbs = randomPoint(bottomZone);
 		var bottomEntryRel = {
 			x: bottomEntryAbs.x - startLeft,
 			y: bottomEntryAbs.y - startTop
 		};
-		var swarmIntro = buildIntroToTarget(swarmStart, videoZone, baseRotate, flipX, bottomEntryRel);
+		var swarmIntro = applyFadeIn(buildIntroToTarget(swarmStart, videoZone, baseRotate, flipX, bottomEntryRel), 0.9);
 		swarmFlyer.style.transform = swarmIntro[0].transform;
 		document.body.appendChild(swarmFlyer);
 

@@ -3160,7 +3160,7 @@ input, select, textarea {
 		overflow: hidden;
 		pointer-events: none;
 		z-index: 0;
-		opacity: 0.50;
+		opacity: 0.62;
 	}
 
 		#wrapper #rainfx .rain-drop {
@@ -3254,11 +3254,15 @@ input, select, textarea {
 			overflow-y: auto;
 		}
 
-			#menu > .inner > ul {
-				list-style: none;
-				margin: 0 0 1em 0;
-				padding: 0;
-			}
+				#menu > .inner > ul {
+					list-style: none;
+					margin: 0 0 1em 0;
+					padding: 0;
+				}
+
+				#menu > .inner ul li::marker {
+					content: '';
+				}
 
 				#menu > .inner > ul > li {
 					padding: 0;
@@ -3271,6 +3275,22 @@ input, select, textarea {
 						line-height: 1.5;
 						border: 0;
 						color: inherit;
+					}
+
+					#menu > .inner > ul > li > ul {
+						list-style: none;
+						margin: 0 0 0.35em 0;
+						padding: 0 0 0 0.75em;
+					}
+
+					#menu > .inner > ul > li > ul > li {
+						list-style: none;
+						padding: 0;
+						border: 0;
+					}
+
+					#menu > .inner > ul > li > ul > li a {
+						padding: 0.45em 0;
 					}
 
 					#menu > .inner > ul > li:first-child {
@@ -3290,13 +3310,13 @@ input, select, textarea {
 			-webkit-tap-highlight-color: transparent;
 			display: block;
 			position: absolute;
-			top: 2em;
+			top: 3.3em;
 			left: -6em;
 			width: 6em;
 			text-indent: 6em;
 			height: 3em;
 			border: 0;
-			font-size: 1em;
+			font-size: 0.75em;
 			opacity: 0;
 			overflow: hidden;
 			padding: 0;

@@ -32,18 +32,12 @@ jobs:
             exit 1
           fi
 
-          lftp -e "
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_HOST" -e "
             set ftp:ssl-allow true;
             set ssl:verify-certificate no;
             set net:max-retries 2;
             set net:timeout 20;
             set ftp:passive-mode true;
-            open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_HOST};
-            mirror -R --delete --verbose \
-              --exclude-glob .git* \
-              --exclude .github \
-              --exclude .DS_Store \
-              --exclude .gitignore \
-              ./ /web;
+            mirror -R --delete --verbose --exclude-glob .git* --exclude .github --exclude .DS_Store --exclude .gitignore ./ /web;
             bye
           "
