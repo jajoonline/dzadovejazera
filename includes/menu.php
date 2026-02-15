@@ -1,7 +1,13 @@
 <nav id="menu">
 	<h2>Menu</h2>
 	<ul>
-		<li><a href="index.php">Dažďové jazerá - úvod</a></li>
+		<li>
+			<a href="index.php">Dažďové jazerá</a>
+			<ul>
+				<li><a href="index.php#prirodne">Prírodné</a></li>
+				<li><a href="index.php#poloprirodne">Poloprírodné</a></li>
+			</ul>
+		</li>
 		<li>
 			<a href="landscaping.php">Krajinotvorba</a>
 			<ul>

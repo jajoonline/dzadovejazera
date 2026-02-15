@@ -68,14 +68,14 @@ include __DIR__ . '/includes/layout-start.php';
 									</a>
 								</article>
 								</section>
-								<section style="margin-top: 3em;" class="intro-copy">
-									<h2>Prírodné dažďové jazerá</h2>
+									<section style="margin-top: 3em;" class="intro-copy">
+										<h2 id="prirodne">Prírodné dažďové jazerá</h2>
 									<p style="text-align: justify;">Bezfóliové dažďové jazerá sa hodia najmä do horských oblastí a tam, kde má pôda nízku priepustnosť. Výborne fungujú aj v lokalitách po melioráciách, kde pomáhajú obnoviť prirodzené zavodnenie krajiny. Ideálne sú miesta s trvalými alebo občasnými povrchovými prameňmi, s vyústením drenáží, prípadne so zvodmi dažďovej vody zo striech a spevnených plôch. Vhodné môžu byť aj lokality s vyššou hladinou podzemnej vody.</p>
 
 									<p style="text-align: justify;">Pri bezfóliových jazerách je prirodzené, že hladina vody sa mení. Kolíše podľa ročného obdobia, množstva zrážok, odparu a vsakovania do pôdy.</p>
 								</section>
-								<section class="intro-copy">
-									<h2>Poloprírodné dažďové jazerá</h2>
+									<section class="intro-copy">
+										<h2 id="poloprirodne">Poloprírodné dažďové jazerá</h2>
 									<p style="text-align: justify;">Niektoré jazerá majú hlbokú časť riešenú ako nepriepustnú, aby si udržali stabilnú hladinu aj v suchších obdobiach. Plytšie zóny sú izolované prírodnými materiálmi, najčastejšie ílom, a môžu byť čiastočne priepustné. Táto kombinácia zabezpečí, že voda neklesne pod požadovanú úroveň, no zároveň sa zachytí čo najväčší objem zrážkovej vody.</p>
 
 									<p style="margin-bottom: 2em; text-align: justify;">Plytké časti slúžia ako prirodzený „záchytný priestor“. Voda v nich zostáva dovtedy, kým sa postupne neodparí alebo nevsiakne do pôdy, čím podporuje vlhkosť v okolí a zlepšuje miestnu mikroklímu.</p>
