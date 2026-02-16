@@ -239,6 +239,7 @@ input, select, textarea {
 		border-radius: 50%;
 		object-fit: cover;
 		object-position: center center;
+		pointer-events: none;
 	}
 
 	video.cta-video:fullscreen {

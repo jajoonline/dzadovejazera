@@ -6,11 +6,11 @@ include __DIR__ . '/includes/layout-start.php';
 ?>
 							<header>
 
-								<div class="cta-video-player" data-video-player>
-									<video class="cta-video" preload="metadata">
-										<source src="videos/dazdove_jazera.mp4" type="video/mp4" />
-										Váš prehliadač nepodporuje prehrávanie videa.
-									</video>
+									<div class="cta-video-player" data-video-player>
+										<video class="cta-video" preload="metadata" playsinline webkit-playsinline muted poster="images/pic13.jpg" controlslist="nodownload noremoteplayback noplaybackrate" disablepictureinpicture disableremoteplayback x-webkit-airplay="deny">
+											<source src="videos/dazdove_jazera.mp4" type="video/mp4" />
+											Váš prehliadač nepodporuje prehrávanie videa.
+										</video>
 									<div class="cta-video-controls">
 										<button type="button" class="button small primary cta-control-btn" data-action="toggle" aria-label="Prehrať alebo pozastaviť video">
 											<span class="icon solid fa-play" aria-hidden="true"></span>

@@ -100,16 +100,8 @@
 		document.addEventListener('fullscreenchange', updateFullscreenIcon);
 		document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
 
-		video.addEventListener('click', function () {
-			if (video.paused) {
-				video.play();
-			} else {
-				video.pause();
-			}
-		});
-
-		var autoplayTriggered = false;
-		var autoplayTimer = null;
+			var autoplayTriggered = false;
+			var autoplayTimer = null;
 
 		function triggerAutoplayOnce() {
 			if (autoplayTriggered) return;
