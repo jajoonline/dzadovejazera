@@ -7,7 +7,7 @@ include __DIR__ . '/includes/layout-start.php';
 							<header>
 
 									<div class="cta-video-player" data-video-player>
-										<video class="cta-video" preload="metadata" playsinline webkit-playsinline muted poster="images/pic13.jpg" controlslist="nodownload noremoteplayback noplaybackrate" disablepictureinpicture disableremoteplayback x-webkit-airplay="deny">
+										<video class="cta-video" preload="auto" playsinline webkit-playsinline muted poster="images/pic13.jpg" controlslist="nodownload noremoteplayback noplaybackrate" disablepictureinpicture disableremoteplayback x-webkit-airplay="deny">
 											<source src="videos/dazdove_jazera.mp4" type="video/mp4" />
 											Váš prehliadač nepodporuje prehrávanie videa.
 										</video>

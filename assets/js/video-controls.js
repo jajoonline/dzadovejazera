@@ -215,6 +215,9 @@
 				window.clearTimeout(autoplayDelayTimer);
 				autoplayDelayTimer = null;
 			}
+			// iOS autoplay reliability: enforce muted before autoplay attempts.
+			video.muted = true;
+			updateMuteIcon();
 			tryAutoplay(function (ok) {
 				autoplayInProgress = false;
 				if (ok) {
@@ -271,6 +274,8 @@
 			video.addEventListener('loadeddata', onVideoReadyForAutoplay);
 			video.addEventListener('canplay', onVideoReadyForAutoplay);
 			video.addEventListener('canplaythrough', onVideoReadyForAutoplay);
+			// Deadlock breaker for iOS/preload=metadata: start timer path even without canplay.
+			window.setTimeout(requestAutoplayOnce, 50);
 
 			if (video.readyState >= 3) {
 				requestAutoplayOnce();
