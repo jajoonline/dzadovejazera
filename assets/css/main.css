@@ -262,6 +262,10 @@ input, select, textarea {
 
 	.cta-video-controls {
 		position: relative;
+		display: grid;
+		grid-template-columns: 2.6em 1fr 2.6em 2.6em;
+		column-gap: 0.55em;
+		align-items: center;
 		width: min(100%, 34rem);
 		height: 2.6em;
 		margin-top: 0.85em;
@@ -278,22 +282,20 @@ input, select, textarea {
 			align-items: center;
 			justify-content: center;
 			line-height: 1;
-			position: absolute;
-			top: 50%;
-			transform: translateY(-50%);
+			position: relative;
 			text-indent: 0;
 		}
 
 		.cta-video-controls [data-action="toggle"] {
-			left: 3.15em;
+			grid-column: 1;
 		}
 
 		.cta-video-controls [data-action="mute"] {
-			right: 3.15em;
+			grid-column: 3;
 		}
 
 		.cta-video-controls [data-action="fullscreen"] {
-			right: 0;
+			grid-column: 4;
 		}
 
 		.cta-video-controls .cta-control-btn .icon {
@@ -320,23 +322,38 @@ input, select, textarea {
 		}
 
 		.cta-video-controls input[type="range"] {
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			transform: translate(-50%, -50%);
-			width: calc(100% - 9.3em);
+			--seek-progress: 0%;
+			grid-column: 2;
+			position: relative;
+			width: 100%;
 			-webkit-appearance: none;
 			appearance: none;
 			height: 0.375em;
 			border-radius: 999px;
-			background: rgba(79, 61, 44, 0.18);
+			background: linear-gradient(
+				to right,
+				rgba(79, 61, 44, 0.34) 0%,
+				rgba(79, 61, 44, 0.34) var(--seek-progress),
+				rgba(79, 61, 44, 0.18) var(--seek-progress),
+				rgba(79, 61, 44, 0.18) 100%
+			);
 			outline: none;
+			z-index: 3;
+			pointer-events: auto;
+			touch-action: pan-y;
+			cursor: default;
 		}
 
 		.cta-video-controls input[type="range"]::-webkit-slider-runnable-track {
 			height: 0.375em;
 			border-radius: 999px;
-			background: rgba(79, 61, 44, 0.18);
+			background: linear-gradient(
+				to right,
+				rgba(79, 61, 44, 0.34) 0%,
+				rgba(79, 61, 44, 0.34) var(--seek-progress),
+				rgba(79, 61, 44, 0.18) var(--seek-progress),
+				rgba(79, 61, 44, 0.18) 100%
+			);
 		}
 
 		.cta-video-controls input[type="range"]::-webkit-slider-thumb {
@@ -348,7 +365,7 @@ input, select, textarea {
 			border: 0;
 			border-radius: 50%;
 			background: #4f3d2c;
-			cursor: pointer;
+			cursor: default;
 		}
 
 		.cta-video-controls input[type="range"]::-moz-range-track {
@@ -370,7 +387,7 @@ input, select, textarea {
 			border: 0;
 			border-radius: 50%;
 			background: #4f3d2c;
-			cursor: pointer;
+			cursor: default;
 		}
 
 	@media screen and (max-width: 736px) {

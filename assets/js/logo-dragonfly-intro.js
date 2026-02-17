@@ -6,6 +6,8 @@
 	var videoWrap = document.querySelector('.cta-video-player');
 	var mainEl = document.getElementById('main');
 	if (!videoWrap || !mainEl) return;
+	var videoEl = videoWrap.querySelector('video');
+	if (!videoEl) return;
 
 	var rect = logoImg.getBoundingClientRect();
 	if (!rect.width || !rect.height) return;
@@ -207,8 +209,17 @@
 		});
 	}
 
+	var introPhaseEnded = false;
+	var introEndRequested = false;
+	var introStartTs = Date.now();
+	var introEndTimer = null;
+	var introAnimations = [];
+	var swarmLoopStarters = [];
+	var mainFlyer = null;
+	var mainAnimation = null;
 	var sessionMainKey = 'dragonfly_main_intro_played';
 	var shouldAnimateMain = true;
+
 	try {
 		shouldAnimateMain = window.sessionStorage.getItem(sessionMainKey) !== '1';
 	} catch (e) {
@@ -219,40 +230,107 @@
 		try {
 			window.sessionStorage.setItem(sessionMainKey, '1');
 		} catch (e) {}
+	}
 
-		var mainFlyer = createFlyer({ size: 1, swarm: false });
+	function endIntroPhase() {
+		if (introPhaseEnded) return;
+		introPhaseEnded = true;
+		videoEl.removeEventListener('loadeddata', requestEndIntroPhase);
+		videoEl.removeEventListener('canplay', requestEndIntroPhase);
+		videoEl.removeEventListener('canplaythrough', requestEndIntroPhase);
+		if (introEndTimer) {
+			window.clearTimeout(introEndTimer);
+			introEndTimer = null;
+		}
+
+		if (mainFlyer && mainAnimation && mainAnimation.playState !== 'finished') {
+			var total = 10000;
+			try {
+				if (mainAnimation.effect && typeof mainAnimation.effect.getTiming === 'function') {
+					total = Number(mainAnimation.effect.getTiming().duration) || total;
+				}
+			} catch (e) {}
+
+			var current = Number(mainAnimation.currentTime) || 0;
+			var remaining = Math.max(0, total - current);
+			if (remaining > 0) {
+				// Mild acceleration only for the main dragonfly final approach.
+				var targetMs = 1400;
+				var speedUp = Math.max(1, remaining / targetMs);
+				speedUp = Math.min(speedUp, 2.1);
+				mainAnimation.playbackRate = speedUp;
+			}
+			try {
+				mainAnimation.play();
+			} catch (e) {}
+		}
+
+		// Keep all intros natural (no forced speed-up). Only ensure finished swarms enter loop.
+		for (var i = 0; i < introAnimations.length; i++) {
+			var anim = introAnimations[i];
+			if (!anim) continue;
+			if (anim === mainAnimation) continue;
+			if (anim.playState === 'finished') {
+				if (typeof anim.__startLoop === 'function') {
+					anim.__startLoop();
+				}
+			}
+		}
+	}
+
+	function requestEndIntroPhase() {
+		if (introPhaseEnded || introEndRequested) return;
+		introEndRequested = true;
+		var elapsed = Date.now() - introStartTs;
+		var minIntroDuration = 4000;
+		var wait = Math.max(0, minIntroDuration - elapsed);
+		if (!wait) {
+			endIntroPhase();
+			return;
+		}
+		introEndTimer = window.setTimeout(endIntroPhase, wait);
+	}
+
+	var mainCleaned = false;
+
+	function cleanupMain() {
+		if (mainCleaned) return;
+		mainCleaned = true;
+		if (!mainFlyer) return;
+
+		// Prevent flash when swapping animated flyer for the static logo.
+		logoImg.style.transition = 'none';
+		logoImg.style.opacity = '1';
+		document.body.classList.remove('logo-intro-active');
+
+		// Brief crossfade out of the animated flyer avoids a single-frame blink.
+		mainFlyer.style.transition = 'opacity 80ms linear';
+		mainFlyer.style.opacity = '0';
+		window.setTimeout(function () {
+			mainFlyer.remove();
+		}, 90);
+	}
+
+	if (shouldAnimateMain) {
+		mainFlyer = createFlyer({ size: 1, swarm: false });
 		var mainStart = randomVideoStart();
 		var mainKeyframes = applyFadeIn(buildIntroToTarget(mainStart, videoZone, 0, 1, { x: 0, y: 0 }), 1);
 		mainFlyer.style.transform = mainKeyframes[0].transform;
 		document.body.appendChild(mainFlyer);
 		document.body.classList.add('logo-intro-active');
-		var mainCleaned = false;
 
-		function cleanupMain() {
-			if (mainCleaned) return;
-			mainCleaned = true;
-
-			// Prevent flash when swapping animated flyer for the static logo.
-			logoImg.style.transition = 'none';
-			logoImg.style.opacity = '1';
-			document.body.classList.remove('logo-intro-active');
-
-			// Brief crossfade out of the animated flyer avoids a single-frame blink.
-			mainFlyer.style.transition = 'opacity 80ms linear';
-			mainFlyer.style.opacity = '0';
-			window.setTimeout(function () {
-				mainFlyer.remove();
-			}, 90);
-		}
-
-		var mainAnimation = mainFlyer.animate(mainKeyframes, {
+		mainAnimation = mainFlyer.animate(mainKeyframes, {
 			duration: 10000,
 			iterations: 1,
 			easing: 'ease-in-out',
 			fill: 'forwards'
 		});
+		introAnimations.push(mainAnimation);
 		mainAnimation.addEventListener('finish', cleanupMain);
 		window.setTimeout(cleanupMain, 10200);
+	} else {
+		logoImg.style.opacity = '1';
+		document.body.classList.remove('logo-intro-active');
 	}
 
 	for (var i = 0; i < 2; i++) {
@@ -284,8 +362,11 @@
 			fill: 'forwards'
 		});
 
-		introAnim.addEventListener('finish', (function (node, rotate, mirror, startPoint) {
+		var startLoop = (function (node, rotate, mirror, startPoint) {
+			var loopStarted = false;
 			return function () {
+				if (loopStarted) return;
+				loopStarted = true;
 				var loopKeyframes = buildBottomLoop(startPoint, rotate, mirror);
 				node.animate(loopKeyframes, {
 					duration: Math.round(rand(7000, 9800)),
@@ -294,6 +375,18 @@
 					fill: 'forwards'
 				});
 			};
-		})(swarmFlyer, baseRotate, flipX, bottomEntryRel));
+		})(swarmFlyer, baseRotate, flipX, bottomEntryRel);
+		introAnimations.push(introAnim);
+		swarmLoopStarters.push(startLoop);
+		introAnim.__startLoop = startLoop;
+		introAnim.addEventListener('finish', startLoop);
+	}
+
+	if (videoEl.readyState >= 3) {
+		requestEndIntroPhase();
+	} else {
+		videoEl.addEventListener('loadeddata', requestEndIntroPhase);
+		videoEl.addEventListener('canplay', requestEndIntroPhase);
+		videoEl.addEventListener('canplaythrough', requestEndIntroPhase);
 	}
 })();
