@@ -218,6 +218,9 @@ input, select, textarea {
 
 	.cta-video-player {
 		width: min(70vw, 40rem);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		margin: 0 auto 2em auto;
 	}
 
@@ -261,41 +264,42 @@ input, select, textarea {
 	}
 
 	.cta-video-controls {
+		--cta-control-size: 2.6em;
+		--cta-control-gap: 6px;
 		position: relative;
-		display: grid;
-		grid-template-columns: 2.6em 1fr 2.6em 2.6em;
-		column-gap: 0.55em;
-		align-items: center;
-		width: min(100%, 34rem);
-		height: 2.6em;
+		width: 100%;
+		height: var(--cta-control-size);
+		box-sizing: border-box;
 		margin-top: 0.85em;
 		margin-left: auto;
 		margin-right: auto;
 	}
 
 		.cta-video-controls .cta-control-btn {
-			width: 2.6em;
-			height: 2.6em;
-			min-width: 2.6em;
+			width: var(--cta-control-size);
+			height: var(--cta-control-size);
+			min-width: var(--cta-control-size);
 			padding: 0;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			line-height: 1;
-			position: relative;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
 			text-indent: 0;
 		}
 
 		.cta-video-controls [data-action="toggle"] {
-			grid-column: 1;
+			left: calc(var(--cta-control-size) + var(--cta-control-gap));
 		}
 
 		.cta-video-controls [data-action="mute"] {
-			grid-column: 3;
+			left: calc(100% - (var(--cta-control-size) * 2) - var(--cta-control-gap));
 		}
 
 		.cta-video-controls [data-action="fullscreen"] {
-			grid-column: 4;
+			left: calc(100% - var(--cta-control-size));
 		}
 
 		.cta-video-controls .cta-control-btn .icon {
@@ -323,9 +327,12 @@ input, select, textarea {
 
 		.cta-video-controls input[type="range"] {
 			--seek-progress: 0%;
-			grid-column: 2;
-			position: relative;
-			width: 100%;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			/* Centered to video axis + fixed 10px gaps to visible neighboring buttons. */
+			width: calc(100% - ((var(--cta-control-size) * 4) + (var(--cta-control-gap) * 4)));
 			-webkit-appearance: none;
 			appearance: none;
 			height: 0.375em;
@@ -397,7 +404,8 @@ input, select, textarea {
 		}
 
 		.cta-video-controls {
-			width: min(100%, 28rem);
+			--cta-control-size: 2.5em;
+			--cta-control-gap: 6px;
 		}
 
 	}

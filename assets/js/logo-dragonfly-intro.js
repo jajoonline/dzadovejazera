@@ -343,25 +343,11 @@
 			opacity: 0.9
 		});
 
-		var swarmStart = randomVideoStart();
 		var bottomEntryAbs = randomPoint(bottomZone);
 		var bottomEntryRel = {
 			x: bottomEntryAbs.x - startLeft,
 			y: bottomEntryAbs.y - startTop
 		};
-		var swarmIntro = applyFadeIn(buildIntroToTarget(swarmStart, videoZone, baseRotate, flipX, bottomEntryRel), 0.9);
-		swarmFlyer.style.transform = swarmIntro[0].transform;
-		document.body.appendChild(swarmFlyer);
-
-		var introDelay = Math.round(rand(0, 600));
-		var introAnim = swarmFlyer.animate(swarmIntro, {
-			duration: 10000,
-			delay: introDelay,
-			iterations: 1,
-			easing: 'ease-in-out',
-			fill: 'forwards'
-		});
-
 		var startLoop = (function (node, rotate, mirror, startPoint) {
 			var loopStarted = false;
 			return function () {
@@ -376,10 +362,41 @@
 				});
 			};
 		})(swarmFlyer, baseRotate, flipX, bottomEntryRel);
-		introAnimations.push(introAnim);
-		swarmLoopStarters.push(startLoop);
-		introAnim.__startLoop = startLoop;
-		introAnim.addEventListener('finish', startLoop);
+
+		if (shouldAnimateMain) {
+			var swarmStart = randomVideoStart();
+			var swarmIntro = applyFadeIn(buildIntroToTarget(swarmStart, videoZone, baseRotate, flipX, bottomEntryRel), 0.9);
+			swarmFlyer.style.transform = swarmIntro[0].transform;
+			document.body.appendChild(swarmFlyer);
+
+			var introDelay = Math.round(rand(0, 600));
+			var introAnim = swarmFlyer.animate(swarmIntro, {
+				duration: 10000,
+				delay: introDelay,
+				iterations: 1,
+				easing: 'ease-in-out',
+				fill: 'forwards'
+			});
+
+			introAnimations.push(introAnim);
+			swarmLoopStarters.push(startLoop);
+			introAnim.__startLoop = startLoop;
+			introAnim.addEventListener('finish', startLoop);
+		} else {
+			swarmFlyer.style.transform = pose(bottomEntryRel.x, bottomEntryRel.y, baseRotate, flipX);
+			swarmFlyer.style.opacity = '0';
+			document.body.appendChild(swarmFlyer);
+			swarmFlyer.animate([
+				{ opacity: 0, transform: swarmFlyer.style.transform },
+				{ opacity: 0.9, transform: swarmFlyer.style.transform }
+			], {
+				duration: 380,
+				iterations: 1,
+				easing: 'ease-out',
+				fill: 'forwards'
+			});
+			window.setTimeout(startLoop, Math.round(rand(80, 320)));
+		}
 	}
 
 	if (videoEl.readyState >= 3) {

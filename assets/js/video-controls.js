@@ -66,6 +66,7 @@
 			if (playPromise && typeof playPromise.catch === 'function') {
 				playPromise.catch(function () {});
 			}
+			return playPromise;
 		}
 
 		function ensureFullscreenPlayback() {
@@ -73,19 +74,54 @@
 			playWithSound();
 		}
 
-		function tryAutoplay() {
+		function tryAutoplay(onDone) {
 			var playPromise = video.play();
 
 			if (playPromise && typeof playPromise.catch === 'function') {
-				playPromise.catch(function () {
+				playPromise.then(function () {
+					if (typeof onDone === 'function') onDone(true);
+				}).catch(function () {
 					video.muted = true;
 					updateMuteIcon();
 					var mutedPromise = video.play();
 					if (mutedPromise && typeof mutedPromise.catch === 'function') {
-						mutedPromise.catch(function () {});
+						mutedPromise.then(function () {
+							if (typeof onDone === 'function') onDone(true);
+						}).catch(function () {
+							if (typeof onDone === 'function') onDone(false);
+						});
+						return;
 					}
+					if (typeof onDone === 'function') onDone(!video.paused);
 				});
+				return;
 			}
+
+			// Browsers without promise support.
+			if (typeof onDone === 'function') onDone(!video.paused);
+		}
+
+		function requestFullscreenForVideo() {
+			if (video.requestFullscreen) {
+				video.requestFullscreen();
+			} else if (video.webkitRequestFullscreen) {
+				video.webkitRequestFullscreen();
+			} else if (video.webkitEnterFullscreen) {
+				video.webkitEnterFullscreen();
+			}
+		}
+
+		function enterFullscreenWithPlayback() {
+			var playPromise = playWithSound();
+			if (playPromise && typeof playPromise.then === 'function') {
+				playPromise.then(function () {
+					requestFullscreenForVideo();
+				}).catch(function () {
+					requestFullscreenForVideo();
+				});
+				return;
+			}
+			requestFullscreenForVideo();
 		}
 
 		toggleBtn.addEventListener('click', function () {
@@ -103,14 +139,7 @@
 
 		fullscreenBtn.addEventListener('click', function () {
 			if (!isVideoFullscreen()) {
-				if (video.requestFullscreen) {
-					video.requestFullscreen();
-				} else if (video.webkitRequestFullscreen) {
-					video.webkitRequestFullscreen();
-				} else if (video.webkitEnterFullscreen) {
-					video.webkitEnterFullscreen();
-				}
-				ensureFullscreenPlayback();
+				enterFullscreenWithPlayback();
 			} else if (document.exitFullscreen) {
 				document.exitFullscreen();
 			} else if (document.webkitExitFullscreen) {
@@ -173,29 +202,54 @@
 
 		var autoplayTriggered = false;
 		var autoplayRequested = false;
+		var autoplayInProgress = false;
 		var autoplayStartTs = Date.now();
 		var autoplayDelayTimer = null;
 		var pausedByViewport = false;
+		var autoplayDelaySessionKey = 'video_autoplay_min_delay_done';
 
 		function triggerAutoplayOnce() {
-			if (autoplayTriggered) return;
-			autoplayTriggered = true;
-			window.removeEventListener('scroll', onFirstScroll);
-			video.removeEventListener('loadeddata', onVideoReadyForAutoplay);
-			video.removeEventListener('canplay', onVideoReadyForAutoplay);
-			video.removeEventListener('canplaythrough', onVideoReadyForAutoplay);
+			if (autoplayTriggered || autoplayInProgress) return;
+			autoplayInProgress = true;
 			if (autoplayDelayTimer) {
 				window.clearTimeout(autoplayDelayTimer);
 				autoplayDelayTimer = null;
 			}
-			tryAutoplay();
+			tryAutoplay(function (ok) {
+				autoplayInProgress = false;
+				if (ok) {
+					autoplayTriggered = true;
+					window.removeEventListener('scroll', onFirstScroll);
+					video.removeEventListener('loadeddata', onVideoReadyForAutoplay);
+					video.removeEventListener('canplay', onVideoReadyForAutoplay);
+					video.removeEventListener('canplaythrough', onVideoReadyForAutoplay);
+					try {
+						window.sessionStorage.setItem(autoplayDelaySessionKey, '1');
+					} catch (e) {}
+					return;
+				}
+
+				// Keep trying on iOS/network edge cases where first attempt gets rejected.
+				autoplayRequested = false;
+				window.setTimeout(function () {
+					if (!autoplayTriggered) requestAutoplayOnce();
+				}, 1200);
+			});
 		}
 
 		function requestAutoplayOnce() {
 			if (autoplayTriggered || autoplayRequested) return;
 			autoplayRequested = true;
+
+			var useMinDelay = true;
+			try {
+				useMinDelay = window.sessionStorage.getItem(autoplayDelaySessionKey) !== '1';
+			} catch (e) {
+				useMinDelay = true;
+			}
+
 			var elapsed = Date.now() - autoplayStartTs;
-			var minAutoplayDelay = 4000;
+			var minAutoplayDelay = useMinDelay ? 4000 : 0;
 			var wait = Math.max(0, minAutoplayDelay - elapsed);
 			if (!wait) {
 				triggerAutoplayOnce();
