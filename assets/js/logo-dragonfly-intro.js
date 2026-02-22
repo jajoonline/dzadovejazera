@@ -57,17 +57,18 @@
 	}
 
 	var mainRect = mainEl.getBoundingClientRect();
-	var mainLeft = mainRect.left + window.scrollX;
-	var mainRight = mainLeft + mainRect.width;
 	var mainBottom = mainRect.top + window.scrollY + mainRect.height;
 	var emPx = parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16;
 	var bandHeight = 18 * emPx;
+	var bottomLift = 10 * emPx;
+	var isMobile = window.matchMedia('(max-width: 736px)').matches;
+	var secondaryCount = isMobile ? 2 : 4;
 
 	var bottomZone = {
-		minX: clamp(mainLeft + 20, margin, docWidth - rect.width - margin),
-		maxX: clamp(mainRight - rect.width - 20, margin, docWidth - rect.width - margin),
-		minY: clamp(mainBottom - bandHeight, margin, docHeight - rect.height - margin),
-		maxY: clamp(mainBottom - rect.height - 8, margin, docHeight - rect.height - margin)
+		minX: margin,
+		maxX: Math.max(margin, docWidth - rect.width - margin),
+		minY: clamp(mainBottom - bandHeight - bottomLift, margin, docHeight - rect.height - margin),
+		maxY: clamp(mainBottom - rect.height - 8 - bottomLift, margin, docHeight - rect.height - margin)
 	};
 
 	if (bottomZone.minX > bottomZone.maxX || bottomZone.minY > bottomZone.maxY) {
@@ -83,6 +84,15 @@
 
 	function randomVideoStart() {
 		return randomPoint(videoZone);
+	}
+
+	function nextPointNear(lastRelX, lastRelY, zone, maxDelta) {
+		var lastAbsX = lastRelX + startLeft;
+		var lastAbsY = lastRelY + startTop;
+		return {
+			x: clamp(lastAbsX + rand(-maxDelta, maxDelta), zone.minX, zone.maxX),
+			y: clamp(lastAbsY + rand(-maxDelta, maxDelta), zone.minY, zone.maxY)
+		};
 	}
 
 	function createFlyer(options) {
@@ -103,7 +113,7 @@
 	function buildIntroToTarget(startAbs, zone, baseRotate, flipX, finalRel) {
 		var keyframes = [];
 		var roamEnd = 0.82;
-		var hops = 6;
+		var hops = 3;
 		var cursor = 0;
 		var lastX = startAbs.x - startLeft;
 		var lastY = startAbs.y - startTop;
@@ -112,28 +122,14 @@
 
 		for (var i = 0; i < hops; i++) {
 			var remaining = roamEnd - cursor;
-			if (remaining <= 0.02) break;
+			if (remaining <= 0.03) break;
 
-			var flight = Math.min(rand(0.06, 0.12), remaining * 0.68);
-			var hold = Math.min(rand(0.03, 0.08), remaining - flight);
-			if (hold < 0.015) hold = 0.015;
-
-			var next = randomPoint(zone);
+			var flight = Math.min(rand(0.18, 0.26), remaining);
+			var next = nextPointNear(lastX, lastY, zone, 120);
 			var x = next.x - startLeft;
 			var y = next.y - startTop;
 
-			var midOffset = Math.min(cursor + flight * 0.55, roamEnd - 0.005);
-			var midX = lastX + (x - lastX) * 0.55 + rand(-10, 10);
-			var midY = lastY + (y - lastY) * 0.55 + rand(-10, 10);
-
-			if (midOffset > cursor + 0.003) {
-				keyframes.push({ offset: midOffset, transform: pose(midX, midY, baseRotate, flipX) });
-			}
-
 			cursor = Math.min(cursor + flight, roamEnd);
-			keyframes.push({ offset: cursor, transform: pose(x, y, baseRotate, flipX) });
-
-			cursor = Math.min(cursor + hold, roamEnd);
 			keyframes.push({ offset: cursor, transform: pose(x, y, baseRotate, flipX) });
 
 			lastX = x;
@@ -151,37 +147,24 @@
 
 	function buildBottomLoop(startRel, baseRotate, flipX) {
 		var keyframes = [];
-		var steps = 10;
+		var steps = 5;
 		var cursor = 0;
 		var lastX = startRel.x;
 		var lastY = startRel.y;
+		var maxDelta = Math.max(70, Math.min(140, (bottomZone.maxX - bottomZone.minX) * 0.18));
 
 		keyframes.push({ offset: 0, transform: pose(lastX, lastY, baseRotate, flipX) });
 
 		for (var i = 0; i < steps; i++) {
 			var remaining = 1 - cursor;
-			if (remaining <= 0.08) break;
+			if (remaining <= 0.06) break;
 
-			var flight = Math.min(rand(0.06, 0.11), remaining * 0.7);
-			var hold = Math.min(rand(0.02, 0.07), remaining - flight);
-			if (hold < 0.012) hold = 0.012;
-
-			var p = randomPoint(bottomZone);
+			var flight = Math.min(rand(0.16, 0.24), remaining);
+			var p = nextPointNear(lastX, lastY, bottomZone, maxDelta);
 			var x = p.x - startLeft;
 			var y = p.y - startTop;
 
-			var midOffset = Math.min(cursor + flight * 0.5, 1 - 0.01);
-			var midX = lastX + (x - lastX) * 0.5 + rand(-12, 12);
-			var midY = lastY + (y - lastY) * 0.5 + rand(-12, 12);
-
-			if (midOffset > cursor + 0.003) {
-				keyframes.push({ offset: midOffset, transform: pose(midX, midY, baseRotate, flipX) });
-			}
-
 			cursor = Math.min(cursor + flight, 1);
-			keyframes.push({ offset: cursor, transform: pose(x, y, baseRotate, flipX) });
-
-			cursor = Math.min(cursor + hold, 1);
 			keyframes.push({ offset: cursor, transform: pose(x, y, baseRotate, flipX) });
 
 			lastX = x;
@@ -193,13 +176,14 @@
 	}
 
 	function applyFadeIn(keyframes, targetOpacity) {
-		var fadeWindow = 0.08;
+		var fadeWindow = 0.025;
+		var startOpacity = targetOpacity * 0.2;
 		return keyframes.map(function (frame) {
 			var o = targetOpacity;
 			if (frame.offset <= 0) {
-				o = 0;
+				o = startOpacity;
 			} else if (frame.offset < fadeWindow) {
-				o = targetOpacity * (frame.offset / fadeWindow);
+				o = startOpacity + (targetOpacity - startOpacity) * (frame.offset / fadeWindow);
 			}
 			return {
 				offset: frame.offset,
@@ -243,29 +227,27 @@
 			introEndTimer = null;
 		}
 
-		if (mainFlyer && mainAnimation && mainAnimation.playState !== 'finished') {
+		function nudgeToFinish(anim, targetMs, maxRate) {
+			if (!anim || anim.playState === 'finished') return;
 			var total = 10000;
 			try {
-				if (mainAnimation.effect && typeof mainAnimation.effect.getTiming === 'function') {
-					total = Number(mainAnimation.effect.getTiming().duration) || total;
+				if (anim.effect && typeof anim.effect.getTiming === 'function') {
+					total = Number(anim.effect.getTiming().duration) || total;
 				}
 			} catch (e) {}
-
-			var current = Number(mainAnimation.currentTime) || 0;
+			var current = Number(anim.currentTime) || 0;
 			var remaining = Math.max(0, total - current);
-			if (remaining > 0) {
-				// Mild acceleration only for the main dragonfly final approach.
-				var targetMs = 1400;
-				var speedUp = Math.max(1, remaining / targetMs);
-				speedUp = Math.min(speedUp, 2.1);
-				mainAnimation.playbackRate = speedUp;
-			}
+			if (remaining <= 0) return;
+			var speedUp = Math.max(1, remaining / targetMs);
+			anim.playbackRate = Math.min(maxRate, speedUp);
 			try {
-				mainAnimation.play();
+				anim.play();
 			} catch (e) {}
 		}
 
-		// Keep all intros natural (no forced speed-up). Only ensure finished swarms enter loop.
+		// Keep timing of main/secondary intros aligned when intro ends.
+		nudgeToFinish(mainAnimation, 2200, 1.45);
+
 		for (var i = 0; i < introAnimations.length; i++) {
 			var anim = introAnimations[i];
 			if (!anim) continue;
@@ -274,6 +256,8 @@
 				if (typeof anim.__startLoop === 'function') {
 					anim.__startLoop();
 				}
+			} else {
+				nudgeToFinish(anim, 2200, 1.45);
 			}
 		}
 	}
@@ -322,7 +306,7 @@
 		mainAnimation = mainFlyer.animate(mainKeyframes, {
 			duration: 10000,
 			iterations: 1,
-			easing: 'ease-in-out',
+			easing: 'linear',
 			fill: 'forwards'
 		});
 		introAnimations.push(mainAnimation);
@@ -333,14 +317,16 @@
 		document.body.classList.remove('logo-intro-active');
 	}
 
-	for (var i = 0; i < 2; i++) {
+	for (var i = 0; i < secondaryCount; i++) {
 		var flipX = i % 2 === 0 ? -1 : 1;
 		var baseRotate = rand(-22, 22);
+		var swarmFilter = 'sepia(0.24) saturate(' + rand(0.78, 1.12).toFixed(2) + ') hue-rotate(' + rand(-9, 11).toFixed(1) + 'deg) brightness(' + rand(0.9, 1.06).toFixed(2) + ')';
 		var swarmFlyer = createFlyer({
 			size: rand(0.72, 1.12),
 			swarm: true,
 			src: 'images/logo-dragonfly-light.svg',
-			opacity: 0.9
+			opacity: 0.9,
+			filter: swarmFilter
 		});
 
 		var bottomEntryAbs = randomPoint(bottomZone);
@@ -354,10 +340,13 @@
 				if (loopStarted) return;
 				loopStarted = true;
 				var loopKeyframes = buildBottomLoop(startPoint, rotate, mirror);
+				var zoneWidth = Math.max(320, bottomZone.maxX - bottomZone.minX);
+				var loopDuration = Math.round(zoneWidth * 24 + rand(2500, 4500));
+				loopDuration = Math.max(10500, Math.min(22000, loopDuration));
 				node.animate(loopKeyframes, {
-					duration: Math.round(rand(7000, 9800)),
+					duration: loopDuration,
 					iterations: Infinity,
-					easing: 'ease-in-out',
+					easing: 'linear',
 					fill: 'forwards'
 				});
 			};
@@ -374,7 +363,7 @@
 				duration: 10000,
 				delay: introDelay,
 				iterations: 1,
-				easing: 'ease-in-out',
+				easing: 'linear',
 				fill: 'forwards'
 			});
 

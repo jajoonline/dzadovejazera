@@ -3075,32 +3075,46 @@ input, select, textarea {
 		#navigation {
 			position: fixed;
 			right: 2em;
-			top: 2em;
+			top: 2.625em;
 			z-index: 10030;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 		}
 
 			#navigation .lang-switch {
 				display: flex;
-				flex-direction: row;
-				gap: 0.2em;
+				flex-direction: column;
+				gap: 0.35em;
 				justify-content: center;
 				align-items: center;
-				margin-top: calc(0.35em + 3px);
-				font-size: 0.56em;
+				margin-top: 3em;
+				font-size: 0.6em;
 				font-weight: 900;
-				letter-spacing: 0.08em;
+				letter-spacing: 0.04em;
 				text-transform: uppercase;
 				line-height: 1;
 			}
 
 			#navigation .lang-switch a {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 2.75em;
+				height: 2.75em;
+				border-radius: 50%;
 				color: #6f604f;
-				border-bottom: 1px solid transparent;
+				background: rgba(230, 210, 178, 0.92);
+				border: 1px solid rgba(111, 96, 79, 0.28);
+				text-decoration: none;
+				line-height: 1;
 			}
 
 			#navigation .lang-switch a.is-active {
 				color: #4f3d2c;
-				border-bottom-color: #4f3d2c;
+				background: #fff6e8;
+				border-color: #4f3d2c;
+				box-shadow: inset 0 0 0 1px rgba(79, 61, 44, 0.2);
 			}
 
 			#navigation ul {
@@ -3193,12 +3207,18 @@ input, select, textarea {
 
 				#navigation {
 					right: 1em;
-					top: 1em;
+					top: 1.55em;
 				}
 
 					#navigation .lang-switch {
-						margin-top: calc(0.3em + 3px);
-						font-size: 0.52em;
+						margin-top: 3em;
+						font-size: 0.56em;
+						gap: 0.3em;
+					}
+
+					#navigation .lang-switch a {
+						width: 2.6em;
+						height: 2.6em;
 					}
 
 					#navigation ul li a[href="#menu"]:before, #navigation ul li a[href="#menu"]:after {
@@ -3311,7 +3331,7 @@ input, select, textarea {
 
 				#menu > .inner .menu-head {
 					display: flex;
-					align-items: baseline;
+					align-items: flex-start;
 					justify-content: space-between;
 					gap: 0.75em;
 				}
@@ -3322,25 +3342,36 @@ input, select, textarea {
 
 				#menu > .inner .menu-lang-switch {
 					display: flex;
-					flex-direction: row;
+					flex-direction: column;
 					align-items: center;
-					gap: 0.45em;
-					font-size: 0.68em;
+					gap: 0.4em;
+					font-size: 0.62em;
 					font-weight: 900;
-					letter-spacing: 0.1em;
+					letter-spacing: 0.05em;
 					text-transform: uppercase;
 					line-height: 1;
 					white-space: nowrap;
+					margin-top: 0.1em;
 				}
 
 				#menu > .inner .menu-lang-switch a {
-					color: rgba(255, 246, 232, 0.72);
-					border-bottom: 1px solid transparent;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					width: 2.8em;
+					height: 2.8em;
+					border-radius: 50%;
+					color: rgba(255, 246, 232, 0.8);
+					background: rgba(255, 246, 232, 0.06);
+					border: 1px solid rgba(255, 246, 232, 0.22);
+					text-decoration: none;
 				}
 
 				#menu > .inner .menu-lang-switch a.is-active {
 					color: #fff6e8;
-					border-bottom-color: #fff6e8;
+					background: rgba(255, 246, 232, 0.14);
+					border-color: #fff6e8;
+					box-shadow: inset 0 0 0 1px rgba(255, 246, 232, 0.18);
 				}
 
 				#menu > .inner > ul {
